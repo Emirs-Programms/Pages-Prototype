@@ -1,24 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import {BrowserRouter,  Routes, Route,Link} from 'react-router-dom'
 const Home = () => {
-    const [users,setUsers] = useState([])
+  const [users, setUsers] = useState([]);
 
-    useEffect(()=>{
-        fetch('https://jsonplaceholder.typicode.com/users/')//Json
-        .then(response => response.json())
-       .then(data => setUsers(data)) 
-    })
-    return (
-        <div style={{ textAlign:'center'}}>
-            <h1>Home</h1>
-            {
-                users.map((item) => {
-                    return <h1 key={item.id}><Link to={`/user/${item.id}`}>{item.name}</Link></h1>
-                })
-            }
-        </div>
-    );
-}
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/users/');
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error('Ошибка при получении данных:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <h1>Home</h1>
+      {users.map(user => (
+        <h1 key={user.id}>{user.name}</h1>
+      ))}
+    </div>
+  );
+};
 
 export default Home;
